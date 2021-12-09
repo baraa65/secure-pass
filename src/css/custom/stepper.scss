@@ -1,0 +1,47 @@
+.custom-stepper {
+	background: transparent;
+	box-shadow: none;
+
+	.q-stepper {
+		&__header {
+			border: 0;
+		}
+		&__label {
+		}
+		&__title {
+			overflow: hidden;
+		}
+	}
+}
+
+.stepper-container {
+	padding: 100px 200px;
+}
+
+
+@media screen and (max-width: $breakpoint-md-max) {
+	.custom-stepper {
+		.q-stepper {
+			&__label {
+				width: 0;
+			}
+		}
+	}
+	.stepper-container {
+		padding: 100px 100px;
+	}
+}
+
+@media screen and (max-width: $breakpoint-md-min) {
+	.custom-stepper {
+		.q-stepper {
+			&__label {
+				width: 0;
+			}
+		}
+	}
+	.stepper-container {
+		padding: 100px 0;
+	}
+}
+

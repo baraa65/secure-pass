@@ -1,0 +1,173 @@
+.q-table {
+	border-spacing: 0px 12px;
+
+	thead {
+		tr {
+			height: auto;
+			th {
+				font-weight: bolder;
+				padding-bottom: 0;
+				padding-top: 0;
+				height: 40px;
+				border: none;
+			}
+		}
+	}
+
+	tbody {
+		tr {
+			background-color: inherit;
+			box-shadow: 0 1px 5px rgb(0 0 0 / 20%), 0 2px 2px rgb(0 0 0 / 14%),
+				0 3px 1px -2px rgb(0 0 0 / 12%);
+			border-radius: 12px;
+			td {
+				background-color: white;
+			}
+			td:first-child {
+				border-radius: 10px 0 0 10px;
+			}
+			td:first-child:hover::before {
+				content: '';
+				background: rgba(0, 0, 0, 0.03);
+				border-radius: 10px 0 0 10px;
+			}
+			td:last-child {
+				border-radius: 0 10px 10px 0;
+				text-align: right;
+			}
+			td:last-child:hover::before {
+				content: '';
+				background: rgba(0, 0, 0, 0.03);
+				border-radius: 0 10px 10px 0;
+			}
+		}
+	}
+
+	&__top {
+		padding: 0 2px;
+	}
+
+	&__middle {
+		padding: 0 2px;
+	}
+
+	&__bottom {
+		border-top: none;
+		height: 40px;
+		min-height: auto;
+		padding-top: 0;
+	}
+	&__container {
+		background: transparent;
+	}
+}
+
+.q-table__grid-item-card.q-table__card {
+	border-radius: 12px;
+	box-shadow: 0 1px 5px rgb(0 0 0 / 20%), 0 2px 2px rgb(0 0 0 / 14%),
+		0 3px 1px -2px rgb(0 0 0 / 12%);
+}
+
+.last-column-sticky {
+	th:last-child,
+	td:last-child {
+		position: sticky;
+		right: 0;
+		z-index: 10;
+	}
+}
+
+.first-column-sticky {
+	th:first-child,
+	td:first-child {
+		position: sticky;
+		left: 0;
+		z-index: 10;
+	}
+}
+
+.first-column-isAction {
+	td:first-child {
+		background: $blue-1;
+	}
+}
+
+.last-column-isAction {
+	td:last-child {
+		background: $blue-1;
+	}
+}
+
+.sticky-header {
+	/* height or max-height is important */
+	height: 300px;
+
+	.q-table__top,
+	.q-table__bottom,
+	thead tr th {
+		border-bottom: none;
+		font-weight: bold;
+		font-size: 13px;
+	}
+
+	thead tr th {
+		position: sticky;
+		z-index: 1;
+	}
+
+	thead tr:first-child th {
+		top: 0;
+	}
+
+	thead tr th,
+	tbody tr td {
+		background-color: white !important;
+	}
+
+	/* this is when the loading indicator appears */
+	&.q-table--loading thead tr:last-child th {
+		/* height of all previous header rows */
+		top: 48px;
+	}
+}
+
+.striped-columns {
+	thead tr th:nth-child(even),
+	tbody tr td:nth-child(even) {
+		background-color: $grey-11 !important;
+	}
+}
+
+.striped-rows {
+	tr:nth-child(even) {
+		background-color: $grey-4;
+	}
+}
+
+// table vertical scrollbar
+.q-table__middle.scroll {
+	/* width */
+	&::-webkit-scrollbar {
+		width: 7px;
+		height: 7px;
+	}
+
+	/* Track */
+	&::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	/* Handle */
+	&::-webkit-scrollbar-thumb {
+		background: rgba($primary, $alpha: 0);
+		border-radius: 5px;
+	}
+
+	&:hover::-webkit-scrollbar-thumb {
+		background: rgba($primary, $alpha: 1);
+	}
+}
+
+table thead {
+	text-transform: capitalize;
+}

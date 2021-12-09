@@ -1,0 +1,43 @@
+// $
+@import 'custom/table';
+@import 'custom/stepper';
+@import 'custom/input';
+@import '~quasar/dist/quasar.addon.css';
+
+.q-page:not(.np) {
+	padding: 8px 8px 100px 8px;
+}
+
+html,
+body {
+	height: 100vh;
+	background: #f0f0f0;
+	position: absolute;
+}
+
+@media screen and (min-width: $breakpoint-md-min) {
+	.q-page:not(.np) {
+		padding: 24px 40px 100px 40px;
+	}
+}
+
+.q-btn {
+	border-radius: 6px;
+}
+.q-card,
+.q-menu {
+	border-radius: 12px;
+}
+
+.q-btn--rounded {
+	border-radius: 50%;
+}
+.q-card {
+	overflow: hidden;
+}
+
+.n-link {
+	text-decoration: none;
+	color: $primary;
+	font-weight: bold;
+}
