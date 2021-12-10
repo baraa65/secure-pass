@@ -1,19 +1,19 @@
 const CryptoJS = require('crypto-js')
 
 class Crypto {
-	static key
 	static RSA
-	static disable = false
+	key
+	disable = false
 
 	static init(RSA) {
 		this.RSA = new RSA()
 	}
 
-	static setKey(key) {
+	setKey(key) {
 		this.key = key
 	}
 
-	static enc(m) {
+	enc(m) {
 		if (this.disable) return m
 		let enc = CryptoJS.AES.encrypt(JSON.stringify(m), this.key).toString()
 		let mac = CryptoJS.HmacSHA256(enc, this.key).toString()
@@ -21,7 +21,7 @@ class Crypto {
 		return { enc, mac }
 	}
 
-	static dec(data) {
+	dec(data) {
 		if (this.disable) return data
 		let m = CryptoJS.AES.decrypt(data.enc, this.key)
 		let mac = CryptoJS.HmacSHA256(data.enc, this.key)
@@ -33,7 +33,15 @@ class Crypto {
 		return data?.enc && mStr ? JSON.parse(mStr) : undefined
 	}
 
-	static keyLoaded(cb) {
+	encStr(m) {
+		return CryptoJS.AES.encrypt(m, this.key).toString()
+	}
+
+	encStr(enc) {
+		return CryptoJS.AES.decrypt(enc, this.key).toString()
+	}
+
+	keyLoaded(cb) {
 		if (this.key) return cb()
 
 		setTimeout(() => {

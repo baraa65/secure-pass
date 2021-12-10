@@ -1,8 +1,7 @@
 const { Crypto } = require('../src/utils/crypto')
-const { RSA } = require('./crypto/rsa')
 const { User } = require('./db/models/user.js')
 
-Crypto.init(RSA)
+let crypto = new Crypto()
 
 class Socket {
 	/** @type {Socket}*/
@@ -16,8 +15,8 @@ class Socket {
 
 	on(key, cb) {
 		this.socket.on(key, async (data) => {
-			Crypto.setKey(this.userData?.key)
-			let m = Crypto.dec(data)
+			crypto.setKey(this.userData?.key)
+			let m = crypto.dec(data)
 
 			if (m.userId) m._user = await User.findOne({ where: { id: m.userId } })
 
@@ -26,8 +25,8 @@ class Socket {
 	}
 
 	emit(key, data) {
-		Crypto.setKey(this.userData?.key)
-		this.socket.emit(key, Crypto.enc(data))
+		crypto.setKey(this.userData?.key)
+		this.socket.emit(key, crypto.enc(data))
 	}
 }
 

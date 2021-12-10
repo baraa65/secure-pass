@@ -9,6 +9,7 @@ const { RSA } = require('src/utils/rsa')
 let socket = io('localhost:3000', { transports: ['websocket'] })
 
 Crypto.init(RSA)
+let crypto = new Crypto()
 
 class SocketClass {
 	/** @type {Socket}*/
@@ -23,14 +24,14 @@ class SocketClass {
 
 		if (!data.userId) data.userId = user?.id
 
-		Crypto.keyLoaded(() => {
-			this.socket.emit(key, Crypto.enc(data))
+		crypto.keyLoaded(() => {
+			this.socket.emit(key, crypto.enc(data))
 		})
 	}
 
 	on(key, cb) {
 		this.socket.on(key, (data) => {
-			let m = Crypto.dec(data)
+			let m = crypto.dec(data)
 
 			cb(m)
 		})
@@ -44,7 +45,7 @@ socket.on('get-public-key', (data) => {
 
 	let key = generateString(10)
 
-	Crypto.setKey(key)
+	crypto.setKey(key)
 
 	socket.emit('session-key', Crypto.RSA.enc({ key }))
 })
