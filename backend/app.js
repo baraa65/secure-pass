@@ -13,6 +13,7 @@ const {
 const { Socket: SocketClass } = require('./socket')
 const { Crypto } = require('./crypto/index')
 const { UserData } = require('./user-data')
+let passwordCrypto = new Crypto()
 
 const io = new Server()
 
@@ -37,16 +38,18 @@ io.on('connection', (socket) => {
 		let res = await validateUserRegister(data.user)
 		if (res) return socket.emit('register', res)
 
-		let user = await User.create(data.user)
+		let password = passwordCrypto.hash(data.user.password)
+		let user = await User.create({ ...data.user, password })
 
-		Socket.emit('register', { status: 200, msg: 'Register Compoleted Successfully', data: user })
+		Socket.emit('register', { status: 200, msg: 'Register Completed Successfully', data: user })
 	})
 
 	Socket.on('login', async (data) => {
 		let res = await validateUserLogin(data.user)
 		if (res) return Socket.emit('login', res)
 
-		let user = await User.findOne({ where: { username: data.user?.username, password: data.user?.password } })
+		let password = passwordCrypto.hash(data.user?.password)
+		let user = await User.findOne({ where: { username: data.user?.username, password } })
 
 		if (!user) {
 			return Socket.emit('login', { status: 401, msg: 'Login Failed, invalid username or password' })

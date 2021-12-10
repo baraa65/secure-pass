@@ -36,10 +36,7 @@ export default {
 
 			UserStorage.set(data.data)
 			this.setUser(data.data)
-
-			setTimeout(() => {
-				this.$router.push('/')
-			}, 1000)
+			this.$router.push('/')
 		})
 	},
 	methods: {

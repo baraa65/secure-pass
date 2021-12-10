@@ -37,8 +37,12 @@ class Crypto {
 		return CryptoJS.AES.encrypt(m, this.key).toString()
 	}
 
-	encStr(enc) {
+	decStr(enc) {
 		return CryptoJS.AES.decrypt(enc, this.key).toString()
+	}
+
+	hash(str) {
+		return CryptoJS.SHA256(str).toString()
 	}
 
 	keyLoaded(cb) {
