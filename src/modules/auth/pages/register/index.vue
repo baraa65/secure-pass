@@ -44,5 +44,10 @@ export default {
 			this.$Socket.emit('register', { user: this.form })
 		},
 	},
+	beforeRouteLeave(_, __, next) {
+		this.$socket.off('register')
+
+		next()
+	},
 }
 </script>

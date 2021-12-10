@@ -110,5 +110,13 @@ export default {
 			this.$Socket.emit('delete-password', { id: password.id })
 		},
 	},
+	beforeRouteLeave(_, __, next) {
+		this.$socket.off('passwords')
+		this.$socket.off('delete-password')
+		this.$socket.off('add-password')
+		this.$socket.off('edit-password')
+
+		next()
+	},
 }
 </script>

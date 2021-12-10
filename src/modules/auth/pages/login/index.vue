@@ -48,5 +48,10 @@ export default {
 			this.$Socket.emit('login', { user: this.form })
 		},
 	},
+	beforeRouteLeave(_, __, next) {
+		this.$socket.off('login')
+
+		next()
+	},
 }
 </script>
