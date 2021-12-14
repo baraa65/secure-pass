@@ -42,6 +42,17 @@
 							<q-btn dense round flat color="red" icon="delete" @click="del(props.row)">
 								<q-tooltip> Delete </q-tooltip>
 							</q-btn>
+							<q-btn
+								v-if="props.row.file"
+								dense
+								round
+								flat
+								color="blue"
+								icon="download"
+								@click="downloadAttachment(props.row)"
+							>
+								<q-tooltip> Download Attachment </q-tooltip>
+							</q-btn>
 						</div>
 					</q-td>
 				</template>
@@ -66,6 +77,7 @@
 import { columns } from './static'
 import PasswordFormDialog from './components/password-form-dialog'
 import PasswordField from '../../../../components/core/password-field'
+import { downloadBase64 } from '../../../../utils/files'
 
 export default {
 	components: { PasswordField, PasswordFormDialog },
@@ -108,6 +120,9 @@ export default {
 		},
 		del(password) {
 			this.$Socket.emit('delete-password', { id: password.id })
+		},
+		downloadAttachment(password) {
+			if (password.file) downloadBase64(password.file, password.title || 'No Title')
 		},
 	},
 	beforeRouteLeave(_, __, next) {

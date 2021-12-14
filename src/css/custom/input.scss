@@ -1,11 +1,9 @@
-.q-input, .q-select {
-	.q-field {
-		&__control {
-			border-radius: 12px !important;
-		}
-		&__control:after {
-			width: calc(100% - 18px);
-			margin-left: 9px;
-		}
+.q-field {
+	&__control {
+		border-radius: 12px !important;
+	}
+	&__control:after {
+		width: calc(100% - 18px);
+		margin-left: 9px;
 	}
 }

@@ -10,6 +10,7 @@ function createPasswordsTable(sequelize) {
 			password: DataTypes.STRING,
 			desc: DataTypes.STRING,
 			userId: DataTypes.INTEGER,
+			file: DataTypes.TEXT,
 		},
 		{ sequelize, modelName: 'password' },
 	)

@@ -15,6 +15,16 @@
 					<div class="q-pb-md">
 						<a-input label="Description" v-model="form.desc" />
 					</div>
+					<div class="q-pb-md">
+						<q-file dense filled v-model="file" label="Attachment">
+							<template #prepend>
+								<q-icon name="attach_file" />
+							</template>
+							<template #append v-if="file">
+								<q-icon name="close" class="cursor-pointer" @click="file = null" />
+							</template>
+						</q-file>
+					</div>
 
 					<div class="row justify-end">
 						<q-btn label="cancel" flat color="grey" class="q-mr-sm" @click="show = false" />
@@ -28,6 +38,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { getBase64 } from '../../../../../utils/files'
 const form = () => ({ title: '', username: '', password: '', desc: '' })
 
 export default {
@@ -36,9 +47,7 @@ export default {
 		visible: { type: Boolean },
 		password: Object,
 	},
-	data: () => ({
-		form: form(),
-	}),
+	data: () => ({ form: form(), file: null }),
 	computed: {
 		...mapGetters('User', ['user']),
 		show: {
@@ -73,18 +82,24 @@ export default {
 		})
 	},
 	methods: {
-		formatForm() {
+		async formatForm() {
 			return {
 				...this.form,
 				userId: this.user?.id,
+				file: this.file ? await getBase64(this.file) : undefined,
 			}
 		},
-		submit() {
-			if (this.isEdit) this.$Socket.emit('edit-password', { id: this.password.id, password: this.formatForm() })
-			else this.$Socket.emit('add-password', { password: this.formatForm() })
+		async submit() {
+			if (this.isEdit)
+				this.$Socket.emit('edit-password', {
+					id: this.password.id,
+					password: await this.formatForm(),
+				})
+			else this.$Socket.emit('add-password', { password: await this.formatForm() })
 		},
 		resetForm() {
 			this.form = form()
+			this.file = null
 		},
 	},
 	watch: {
