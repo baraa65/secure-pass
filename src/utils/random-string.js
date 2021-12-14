@@ -1,4 +1,4 @@
-export function generateString(length) {
+function generateString(length) {
 	let result = ''
 	let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 	let charactersLength = characters.length
@@ -7,3 +7,5 @@ export function generateString(length) {
 	}
 	return result
 }
+
+module.exports = { generateString }

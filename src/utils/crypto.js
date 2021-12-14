@@ -1,9 +1,9 @@
+const { generateString } = require('./random-string')
 const CryptoJS = require('crypto-js')
 
 class Crypto {
 	static RSA
 	key
-	disable = false
 
 	static init(RSA) {
 		this.RSA = new RSA()
@@ -14,16 +14,23 @@ class Crypto {
 	}
 
 	enc(m) {
-		if (this.disable) return m
-		let enc = CryptoJS.AES.encrypt(JSON.stringify(m), this.key).toString()
+		let iv = generateString(5)
+		let enc = CryptoJS.AES.encrypt(JSON.stringify(m), this.key, {
+			mode: CryptoJS.mode.CTR,
+			iv,
+			padding: CryptoJS.pad.NoPadding,
+		}).toString()
 		let mac = CryptoJS.HmacSHA256(enc, this.key).toString()
 
-		return { enc, mac }
+		return { enc, mac, iv }
 	}
 
 	dec(data) {
-		if (this.disable) return data
-		let m = CryptoJS.AES.decrypt(data.enc, this.key)
+		let m = CryptoJS.AES.decrypt(data.enc, this.key, {
+			mode: CryptoJS.mode.CTR,
+			iv: data.iv,
+			padding: CryptoJS.pad.NoPadding,
+		})
 		let mac = CryptoJS.HmacSHA256(data.enc, this.key)
 
 		if (mac != data.mac) throw `Invalid MAC (${mac}, ${data.mac})`

@@ -1,7 +1,7 @@
 import io, { Socket } from 'socket.io-client'
 import { boot } from 'quasar/wrappers'
 import Store from 'src/store'
-import { generateString } from '../utils/random-string'
+const { generateString } = require('../utils/random-string')
 import { $notify } from '../utils/notify'
 const store = Store()
 const { Crypto } = require('src/utils/crypto')
