@@ -3,6 +3,8 @@ import { boot } from 'quasar/wrappers'
 import Store from 'src/store'
 const { generateString } = require('../utils/random-string')
 import { $notify } from '../utils/notify'
+import { clientRSA } from '../utils/client-rsa'
+import { KeyPairStorage } from '../storage/private-key'
 const store = Store()
 const { Crypto } = require('src/utils/crypto')
 const { RSA } = require('src/utils/rsa')
@@ -37,10 +39,9 @@ class SocketClass {
 		})
 	}
 }
-
 socket.emit('get-public-key')
 
-socket.on('get-public-key', (data) => {
+socket.on('get-public-key', async (data) => {
 	Crypto.RSA.setPublicKey(data?.data?.key)
 
 	let key = generateString(10)
@@ -54,7 +55,17 @@ socket.on('session-key', (data) => {
 	$notify(data)
 })
 
+function getUserKeys() {
+	let user = store.getters['User/user']
+	if (!user) return
+	let keys = KeyPairStorage.get(user.username)
+	if (!keys) return
+
+	clientRSA.setKeys(keys)
+}
+
 export default boot(async ({ app }) => {
 	app.config.globalProperties.$socket = socket
 	app.config.globalProperties.$Socket = new SocketClass(socket)
+	getUserKeys()
 })

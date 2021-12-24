@@ -26,6 +26,8 @@
 <script>
 import { mapMutations } from 'vuex'
 import { UserStorage } from '../../../../storage/user'
+import { clientRSA } from '../../../../utils/client-rsa'
+import { KeyPairStorage } from '../../../../storage/private-key'
 
 export default {
 	data: () => ({ form: { username: '', password: '' } }),
@@ -40,8 +42,18 @@ export default {
 	},
 	methods: {
 		...mapMutations('User', ['setUser']),
-		submit() {
-			this.$Socket.emit('register', { user: this.form })
+		async submit() {
+			let keyPair = await clientRSA.generateKeys()
+
+			KeyPairStorage.set(this.form.username, keyPair)
+
+			this.$Socket.emit('register', {
+				user: {
+					...this.form,
+					publicKey: keyPair.encryption.publicKey,
+					signingPublicKey: keyPair.signing.publicKey,
+				},
+			})
 		},
 	},
 	beforeRouteLeave(_, __, next) {

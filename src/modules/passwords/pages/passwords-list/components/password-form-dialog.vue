@@ -39,6 +39,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getBase64 } from '../../../../../utils/files'
+import { clientRSA } from '../../../../../utils/client-rsa'
 const form = () => ({ title: '', username: '', password: '', desc: '' })
 
 export default {
@@ -83,8 +84,11 @@ export default {
 	},
 	methods: {
 		async formatForm() {
+			let password = await clientRSA.enc({ password: this.form.password })
+
 			return {
 				...this.form,
+				password,
 				userId: this.user?.id,
 				file: this.file ? await getBase64(this.file) : undefined,
 			}

@@ -7,7 +7,7 @@ function createPasswordsTable(sequelize) {
 		{
 			title: DataTypes.STRING,
 			username: DataTypes.STRING,
-			password: DataTypes.STRING,
+			password: DataTypes.TEXT,
 			desc: DataTypes.STRING,
 			userId: DataTypes.INTEGER,
 			file: DataTypes.TEXT,
