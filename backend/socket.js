@@ -7,10 +7,12 @@ class Socket {
 	/** @type {Socket}*/
 	socket = null
 	userData = null
+	serverRSA = null
 
-	constructor(socket, userData) {
+	constructor(socket, userData, serverRSA) {
 		this.socket = socket
 		this.userData = userData
+		this.serverRSA = serverRSA
 	}
 
 	on(key, cb) {
@@ -18,7 +20,13 @@ class Socket {
 			crypto.setKey(this.userData?.key)
 			let m = crypto.dec(data)
 
-			if (m.userId) m._user = await User.findOne({ where: { id: m.userId } })
+			if (m.userId) {
+				m._user = await User.findOne({ where: { id: m.userId } })
+				this.serverRSA.setSigningPublicKey(m._user?.signingPublicKey)
+				let valid = await this.serverRSA.verify(m.userId, m.signature)
+
+				if (!valid) return console.error('Invalid Signature!!!')
+			}
 
 			cb(m)
 		})

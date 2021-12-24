@@ -21,10 +21,13 @@ class SocketClass {
 		this.socket = socket
 	}
 
-	emit(key, data = {}) {
+	async emit(key, data = {}) {
 		let user = store.getters['User/user']
 
-		if (!data.userId) data.userId = user?.id
+		if (!data.userId && user) {
+			data.userId = user.id
+			data.signature = await clientRSA.sign(user.id)
+		}
 
 		crypto.keyLoaded(() => {
 			this.socket.emit(key, crypto.enc(data))

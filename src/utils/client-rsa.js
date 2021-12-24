@@ -61,10 +61,11 @@ export class ClientRSA {
 			KeysGenerator.B64toAB(btoa(data)),
 		)
 
-		return signature
+		return KeysGenerator.ABtoB64(signature)
 	}
 
 	async verify(data, signature) {
+		signature = KeysGenerator.B64toAB(signature)
 		let publicKey = await KeysGenerator.importSigningKey(this.signingPublicKey, 'public')
 
 		let result = await window.crypto.subtle.verify(

@@ -34,6 +34,12 @@ class ServerRsa {
 	setPrivateKey(key) {
 		this.privateKey = key
 	}
+	setSigningPublicKey(key) {
+		this.signingPublicKey = key
+	}
+	setSigningPrivateKey(key) {
+		this.signingPublicKey = key
+	}
 
 	async enc(m) {
 		let publicKey = await KeysGenerator.importKey(this.publicKey, 'public')
@@ -62,10 +68,11 @@ class ServerRsa {
 			KeysGenerator.B64toAB(btoa(data)),
 		)
 
-		return signature
+		return KeysGenerator.ABtoB64(signature)
 	}
 
 	async verify(data, signature) {
+		signature = KeysGenerator.B64toAB(signature)
 		let publicKey = await KeysGenerator.importSigningKey(this.signingPublicKey, 'public')
 
 		let result = await subtle.verify(

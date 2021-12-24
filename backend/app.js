@@ -13,6 +13,7 @@ const {
 const { Socket: SocketClass } = require('./socket')
 const { Crypto } = require('./crypto/index')
 const { UserData } = require('./user-data')
+const { ServerRsa } = require('./crypto/server-rsa')
 let passwordCrypto = new Crypto()
 
 const io = new Server()
@@ -20,7 +21,8 @@ const io = new Server()
 io.on('connection', (socket) => {
 	console.error('connect')
 	let userData = new UserData()
-	const Socket = new SocketClass(socket, userData)
+	const serverRSA = new ServerRsa()
+	const Socket = new SocketClass(socket, userData, serverRSA)
 
 	socket.on('get-public-key', () => {
 		socket.emit('get-public-key', { status: 200, data: { key: Crypto.RSA.publicKey } })
@@ -54,6 +56,7 @@ io.on('connection', (socket) => {
 		if (!user) {
 			return Socket.emit('login', { status: 401, msg: 'Login Failed, invalid username or password' })
 		}
+
 		Socket.emit('login', { status: 200, msg: 'Login Completed Successfully', data: user })
 	})
 
