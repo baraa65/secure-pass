@@ -1,7 +1,9 @@
 require('./db')
+const Sequelize = require('sequelize')
 const { Server } = require('socket.io')
 const { User } = require('./db/models/user')
 const { Password } = require('./db/models/password')
+const { SharedPassword } = require('./db/models/shared-password')
 const {
 	validateUserRegister,
 	validateUserLogin,
@@ -60,6 +62,12 @@ io.on('connection', (socket) => {
 		Socket.emit('login', { status: 200, msg: 'Login Completed Successfully', data: user })
 	})
 
+	Socket.on('users', async (data) => {
+		let users = await User.findAll({ where: { id: { [Sequelize.Op.not]: data._user?.id } } })
+
+		Socket.emit('users', { status: 200, data: users })
+	})
+
 	Socket.on('passwords', async (data) => {
 		let passwords = await Password.findAll({ where: { userId: data._user?.id || null } })
 
@@ -101,6 +109,33 @@ io.on('connection', (socket) => {
 		await Password.destroy({ where: { id: data.id } })
 
 		Socket.emit('delete-password', { status: 200, msg: 'Password Has Been Deleted', data })
+	})
+
+	Socket.on('share-password', async (data) => {
+		let shareRequest = await SharedPassword.create(data.sharedPassword)
+		Socket.emit('share-password', { status: 200, msg: 'Password Has Been Shared', data: shareRequest })
+	})
+
+	Socket.on('shared-passwords', async (data) => {
+		let shareRequests = await SharedPassword.findAll({ where: { receiverId: data.userId } })
+
+		Socket.emit('shared-passwords', { status: 200, data: shareRequests })
+	})
+
+	Socket.on('accept-shared-password', async (data) => {
+		let password = data.password
+		let sharedPasswordId = data.sharedPasswordId
+
+		await Password.create({ password, userId: data._user.id })
+		await SharedPassword.destroy({ where: { id: sharedPasswordId } })
+
+		Socket.emit('accept-shared-password', { status: 200, msg: 'Password Has Been Accepted' })
+	})
+
+	Socket.on('reject-shared-password', async (data) => {
+		await SharedPassword.destroy({ where: { id: data.sharedPasswordId } })
+
+		Socket.emit('reject-shared-password', { status: 200, msg: 'Password Has Been Rejected' })
 	})
 })
 

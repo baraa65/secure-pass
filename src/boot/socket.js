@@ -24,8 +24,9 @@ class SocketClass {
 	async emit(key, data = {}) {
 		let user = store.getters['User/user']
 
-		if (!data.userId && user) {
+		if (!data.userId && Object.keys(user).length) {
 			data.userId = user.id
+			getUserKeys()
 			data.signature = await clientRSA.sign(user.id)
 		}
 

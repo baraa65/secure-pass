@@ -33,6 +33,12 @@ export class ClientRSA {
 	setPrivateKey(key) {
 		this.privateKey = key
 	}
+	setSigningPublicKey(key) {
+		this.signingPublicKey = key
+	}
+	setSigningPrivateKey(key) {
+		this.signingPublicKey = key
+	}
 
 	async enc(m) {
 		let publicKey = await KeysGenerator.importKey(this.publicKey, 'public')

@@ -1,4 +1,5 @@
-const { createPasswordsTable, Password } = require('./models/password')
+const { createSharedPasswordsTable } = require('./models/shared-password')
+const { createPasswordsTable } = require('./models/password')
 const { createUsersTable } = require('./models/user')
 const { Sequelize } = require('sequelize')
 
@@ -7,6 +8,7 @@ sequelize.authenticate().then(() => console.log('SQL connected'))
 
 createUsersTable(sequelize)
 createPasswordsTable(sequelize)
+createSharedPasswordsTable(sequelize)
 sequelize.sync()
 
 module.exports = { sequelize }
