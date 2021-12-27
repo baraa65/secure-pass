@@ -120,7 +120,6 @@ import PasswordFormDialog from './components/password-form-dialog'
 import PasswordField from '../../../../components/core/password-field'
 import { downloadBase64 } from '../../../../utils/files'
 import SharePasswordDialog from './components/share-password-dialog'
-import { clientRSA } from '../../../../utils/client-rsa'
 
 export default {
 	components: { SharePasswordDialog, PasswordField, PasswordFormDialog },

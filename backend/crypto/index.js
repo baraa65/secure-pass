@@ -17,7 +17,6 @@ let { publicKey, privateKey } = generateKeyPairSync('rsa', {
 		passphrase: '1234',
 	},
 })
-
 Crypto.RSA.setPublicKey(publicKey)
 Crypto.RSA.setPrivateKey(privateKey)
 

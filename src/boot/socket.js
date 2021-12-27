@@ -5,6 +5,7 @@ const { generateString } = require('../utils/random-string')
 import { $notify } from '../utils/notify'
 import { clientRSA } from '../utils/client-rsa'
 import { KeyPairStorage } from '../storage/private-key'
+import { certVerifier } from '../utils/ca'
 const store = Store()
 const { Crypto } = require('src/utils/crypto')
 const { RSA } = require('src/utils/rsa')
@@ -43,10 +44,15 @@ class SocketClass {
 		})
 	}
 }
-socket.emit('get-public-key')
+socket.emit('get-cert')
 
-socket.on('get-public-key', async (data) => {
-	Crypto.RSA.setPublicKey(data?.data?.key)
+socket.on('get-cert', async (data) => {
+	let cert = { CN: data.data.cert.CN, publicKey: data.data.cert.publicKey }
+
+	if (cert.CN != 'secure-pass.com') throw 'Invalid CN'
+	if (!(await certVerifier.verify(cert, data.data.cert.signature))) throw 'Invalid Signature'
+
+	Crypto.RSA.setPublicKey(cert.publicKey)
 
 	let key = generateString(10)
 
